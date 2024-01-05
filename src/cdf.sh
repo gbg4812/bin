@@ -1,6 +1,9 @@
 #!/bin/bash
 
-sd() {
+# add suport for ignoring files in .gitignore
+# and a global .ignore config file
+
+sf() {
     current=$(dirname pwd)
     echo $current
 
