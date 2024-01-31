@@ -2,7 +2,6 @@
 
 # TODO
 # - Particular depth levels per adress
-# - Fix tmux nested sessions
 
 _replace_wave() {
     echo $1 | sed "s,~,$HOME,g" 
@@ -44,11 +43,24 @@ sd() {
 st() {
     dirpath=$(_replace_wave $(_search_dirs))
     dirname=$(basename $dirpath)
-    if [[ -z $TMUX ]]; then
-        tmux attach -t $dirname || tmux new -s $dirname -c $dirpath
-    else
-        tmux attach -t $dirname ||tmux new -d -s $dirname -c $dirpath        
+    tmux_running=$(pgrep tmux)
+
+    # if tmux not running and not server
+    if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
+        tmux new -s $dirname -c $dirpath
+        exit 0
     fi
+
+    if ! tmux has-session -t=$dirname 2> /dev/null; then
+        tmux new -ds $dirname -c $dirpath        
+    fi
+
+    tmux switch-client -t $dirname
+}
+
+sp() {
+    selected=$(find $(echo $PATH | tr ":" " ") | tr " " "\n" | fzf)
+    cd $(dirname $selected)
 }
 
 sd-add() {
