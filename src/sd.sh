@@ -55,7 +55,11 @@ st() {
         tmux new -ds $dirname -c $dirpath        
     fi
 
-    tmux switch-client -t $dirname
+    if [[ -z $TMUX ]]; then
+        tmux attach -t $dirname
+    else
+        tmux switch-client -t $dirname
+    fi
 }
 
 sp() {
