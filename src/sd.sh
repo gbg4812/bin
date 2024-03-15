@@ -33,11 +33,15 @@ _check_dirs() {
 _search_dirs() {
     lpath=~/.sd-locations
     _check_dirs $lpath
-    echo $(_emplace_wave "$(find $(_replace_wave "$(cat $lpath | tr "\n" " ")" ) -maxdepth 1 -mindepth 1 -type d)" | tr " " "\n" | fzf)
+    selected=$(_emplace_wave "$(find $(_replace_wave "$(cat $lpath | tr "\n" " ")" ) -maxdepth 1 -mindepth 1 -type d)" | tr " " "\n" | fzf)
+    echo $selected
 }
 
 sd() {
     cd $(_replace_wave $(_search_dirs))
+    if [[ -r .wellcome.sh ]]; then
+        source .wellcome.sh
+    fi
 }
 
 st() {
@@ -47,18 +51,26 @@ st() {
 
     # if tmux not running and not server
     if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
+        # echo "tmux is not runing and we are outside tmux"
         tmux new -s $dirname -c $dirpath
-        exit 0
-    fi
 
-    if ! tmux has-session -t=$dirname 2> /dev/null; then
+    # if tmux does not have a session with the name dirname
+    elif ! tmux has-session -t=$dirname 2> /dev/null; then
+        # echo "tmux is runing but we need to create a session"
         tmux new -ds $dirname -c $dirpath        
     fi
 
+    # if we are outside tmux
     if [[ -z $TMUX ]]; then
-        tmux attach -t $dirname
+        # echo "we are outside tmux!!"
+        tmux attach -t $dirname 
     else
+        # echo "we are inside tmux!!"
         tmux switch-client -t $dirname
+    fi
+
+    if [[ -r .wellcome.sh ]]; then
+        source .wellcome.sh
     fi
 }
 
