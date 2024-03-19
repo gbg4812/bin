@@ -32,11 +32,15 @@ _check_dirs() {
 _search_dirs() {
     lpath=~/.sd-locations
     _check_dirs $lpath
-    echo $(_emplace_wave "$(find $(_replace_wave "$(cat $lpath | tr "\n" " ")" ) -maxdepth 1 -mindepth 1 -type d)" | tr " " "\n" | fzf)
+    selected=$(_emplace_wave "$(find $(_replace_wave "$(cat $lpath | tr "\n" " ")" ) -maxdepth 1 -mindepth 1 -type d)" | tr " " "\n" | fzf)
+    echo $selected
 }
 
 sd() {
     cd $(_replace_wave $(_search_dirs))
+    if [[ -r .wellcome.sh ]]; then
+        source .wellcome.sh
+    fi
 }
 
 st() {
@@ -51,10 +55,16 @@ st() {
         tmux new -ds $dirname -c $dirpath 
     fi
 
+    # if we are outside tmux
     if [[ -z $TMUX ]]; then
         tmux attach -t $dirname 
     else
+        # echo "we are inside tmux!!"
         tmux switch-client -t $dirname
+    fi
+
+    if [[ -r .wellcome.sh ]]; then
+        source .wellcome.sh
     fi
 }
 
