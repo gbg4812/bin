@@ -10,7 +10,6 @@ _replace_wave() {
 _emplace_wave() {
     echo $1 | sed "s,$HOME,~,g"
 }
-
 _check_dirs() {
     if [[ -f $1 ]]; 
     then
@@ -47,16 +46,13 @@ st() {
 
     # if tmux not running and not server
     if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
-        tmux new -s $dirname -c $dirpath
-        exit 0
-    fi
-
-    if ! tmux has-session -t=$dirname 2> /dev/null; then
-        tmux new -ds $dirname -c $dirpath        
+        tmux new -ds $dirname -c $dirpath 
+    elif ! tmux has-session -t=$dirname 2> /dev/null; then
+        tmux new -ds $dirname -c $dirpath 
     fi
 
     if [[ -z $TMUX ]]; then
-        tmux attach -t $dirname
+        tmux attach -t $dirname 
     else
         tmux switch-client -t $dirname
     fi

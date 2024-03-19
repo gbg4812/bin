@@ -1,0 +1,5 @@
+#!/bin/bash
+
+sleep $1
+prog=$(pgrep $2)
+kill $prog
