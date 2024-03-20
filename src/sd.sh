@@ -38,9 +38,6 @@ _search_dirs() {
 
 sd() {
     cd $(_replace_wave $(_search_dirs))
-    if [[ -r .wellcome.sh ]]; then
-        source .wellcome.sh
-    fi
 }
 
 st() {
@@ -61,10 +58,6 @@ st() {
     else
         # echo "we are inside tmux!!"
         tmux switch-client -t $dirname
-    fi
-
-    if [[ -r .wellcome.sh ]]; then
-        source .wellcome.sh
     fi
 }
 
