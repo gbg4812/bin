@@ -33,7 +33,7 @@ _search_dirs() {
     lpath=~/.sd-locations
     _check_dirs $lpath
     selected=$(_emplace_wave "$(find $(_replace_wave "$(cat $lpath | tr "\n" " ")" ) -maxdepth 1 -mindepth 1 -type d)" | tr " " "\n" | fzf)
-    echo $selected
+    echo $selected | tr "." "_"
 }
 
 sd() {
