@@ -33,7 +33,7 @@ _search_dirs() {
     lpath=~/.sd-locations
     _check_dirs $lpath
     selected=$(_emplace_wave "$(find $(_replace_wave "$(cat $lpath | tr "\n" " ")" ) -maxdepth 1 -mindepth 1 -type d)" | tr " " "\n" | fzf)
-    echo $selected | tr "." "_"
+    echo $selected
 }
 
 sd() {
@@ -42,7 +42,7 @@ sd() {
 
 st() {
     dirpath=$(_replace_wave $(_search_dirs))
-    dirname=$(basename $dirpath)
+    dirname=$(basename $dirpath | tr "." "_" )
     tmux_running=$(pgrep tmux)
 
     # if tmux not running and not server
