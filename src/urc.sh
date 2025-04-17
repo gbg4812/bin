@@ -1,5 +1,5 @@
 #!/bin/bash
 
 urc() {
-    source ~/.bashrc
+    source ~/.zshrc
 }
